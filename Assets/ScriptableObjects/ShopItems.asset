@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c19442792b3e9e64ca19569cd2bee137, type: 3}
+  m_Name: ShopItems
+  m_EditorClassIdentifier: 
+  shopItems:
+  - ActiveSprite: {fileID: 21300000, guid: 9c15bc749bf538c41847713b6c82b3e4, type: 3}
+    DisabledSprite: {fileID: 21300000, guid: 28c00e6cbbfa4d444b62dd0fab35c33e, type: 3}
+    LevelOpens:
+    - Level: 1
+      Count: 2
+    - Level: 2
+      Count: 3
+    - Level: 5
+      Count: 4
+    - Level: 6
+      Count: 5
+    Name: Mine
+    Cost: 50
+  - ActiveSprite: {fileID: 21300000, guid: 64b2e65728bbac849a04bbe0d744dd39, type: 3}
+    DisabledSprite: {fileID: 21300000, guid: f3591579cea4fbe4f80d569a051874f9, type: 3}
+    LevelOpens:
+    - Level: 2
+      Count: 1
+    - Level: 4
+      Count: 2
+    - Level: 6
+      Count: 4
+    Name: House1
+    Cost: 100
+  - ActiveSprite: {fileID: 21300000, guid: 98b1e61f51f921f4fa0e662ccaf33178, type: 3}
+    DisabledSprite: {fileID: 21300000, guid: c6fcfd1bda6b5fb439d6f77f9612f74d, type: 3}
+    LevelOpens:
+    - Level: 3
+      Count: 1
+    - Level: 4
+      Count: 2
+    - Level: 6
+      Count: 3
+    Name: House2
+    Cost: 200
+  - ActiveSprite: {fileID: 21300000, guid: 6f503c81d5a437b4ab02b73cf481591e, type: 3}
+    DisabledSprite: {fileID: 21300000, guid: 0b3cf803a24c423448c4f46dba4efae3, type: 3}
+    LevelOpens:
+    - Level: 3
+      Count: 1
+    - Level: 6
+      Count: 2
+    Name: Market
+    Cost: 500
+  - ActiveSprite: {fileID: 21300000, guid: 867026455c665be45b0c9b45f6b4b337, type: 3}
+    DisabledSprite: {fileID: 21300000, guid: fe70b24de89aa8b49b3ab00493d470d2, type: 3}
+    LevelOpens:
+    - Level: 4
+      Count: 1
+    - Level: 6
+      Count: 2
+    Name: House3
+    Cost: 800
+  - ActiveSprite: {fileID: 21300000, guid: 330ce920bd64cc24ebdfdfc34e86a685, type: 3}
+    DisabledSprite: {fileID: 21300000, guid: 60eb39119d462ba4da1865a0f800ae8b, type: 3}
+    LevelOpens:
+    - Level: 5
+      Count: 1
+    - Level: 6
+      Count: 2
+    Name: Mill
+    Cost: 1500
+  buildingObjects: {fileID: 11400000, guid: b75b413286bea734bb397fadbaffcb3c, type: 2}
