@@ -18,7 +18,15 @@ public class Building : MonoBehaviour, IPointerClickHandler
     private BuildingObject _buildingObject;
     private float _currentMoney;
     private float _moneyPerSecond;
-    [SerializeField] private string Name;
+    public string Name;
+
+    public float Money
+    {
+        get
+        {
+            return _currentMoney;
+        }
+    }
 
     public DragAndDrop DragAndDrop { get { return _dragAndDrop; } }
 

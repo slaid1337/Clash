@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using Newtonsoft.Json;
 
@@ -64,60 +63,59 @@ public static class SaveSystem
         PlayerPrefs.SetInt("IsFirstStart", 1);
     }
 
-    public static void SaveOccupedFields(List<Vector3Int> data)
-    {
-        PlayerPrefs.SetString("OccupedFields", ConvertFieldsToString(data));
-    }
-
     public static List<Vector3Int> GetOccupedFields()
     {
-        string fieldsData = PlayerPrefs.GetString("OccupedFields");
-        fieldsData += "4,-1,0;";
-        return ConvertStringToFields(fieldsData);
+        List<BuildingSave> saves = GetBuildingSaves();
+        List<Vector3Int> positions = new List<Vector3Int>();
+
+        if (saves != null)
+        {
+            foreach (var item in saves)
+            {
+                positions.Add(item.Position);
+            }
+        }
+        else
+        {
+            return new List<Vector3Int> ();
+        }
+        
+
+        return positions;
     }
 
-    private static List<Vector3Int> ConvertStringToFields(string data)
+    public static bool CheckOnBuidProject(string name)
     {
-        if (data.Length < 4) return new List<Vector3Int>();
-        
-        string[] fields = data.Split(';', StringSplitOptions.RemoveEmptyEntries);
-        
-        List<Vector3Int> result = new List<Vector3Int>();
-
-        foreach (var item in fields)
-        {
-            string[] container = item.Split(',');
-
-            Vector3Int newField = new Vector3Int(Int32.Parse(container[0]),
-                Int32.Parse(container[1]),
-                Int32.Parse(container[2]));
-            result.Add(newField);
-        }
-
-        return result;
+        return PlayerPrefs.GetInt(name + "builded", 0) == 1; 
     }
 
-    private static string ConvertFieldsToString(List<Vector3Int> data)
+    public static void SetBuildProject(string name)
     {
-        string fields = string.Empty;
-
-        foreach (var item in data)
-        {
-            fields += $"{item.x},{item.y},{item.z};";
-        }
-
-        return fields;
+        PlayerPrefs.SetInt(name + "builded", 1);
     }
 
     public static int GetLvl()
     {
-        return PlayerPrefs.GetInt("Lvl", 0);
+        return PlayerPrefs.GetInt("Lvl", 6000);
     }
 
     public static void SetLvl(int lvl)
     {
         PlayerPrefs.SetInt("Lvl", lvl);
         OnLvlChenged?.Invoke(lvl);
+    }
+
+    public static void SetBuildingSaves(List<BuildingSave> save)
+    {
+        string data = JsonConvert.SerializeObject(save);
+
+        PlayerPrefs.SetString("BuildingData", data);
+    }
+
+    public static List<BuildingSave> GetBuildingSaves()
+    {
+        string data = PlayerPrefs.GetString("BuildingData", "");
+        return JsonConvert.DeserializeObject<List<BuildingSave>>(data);
     }
 }
 

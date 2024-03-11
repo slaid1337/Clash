@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BuildingObject", menuName = "BuildingObject")]
+[CreateAssetMenu(fileName = "BuildingObjects", menuName = "BuildingObjects")]
 public class BuildingObjects : ScriptableObject
 {
     public BuildingObject[] objects;

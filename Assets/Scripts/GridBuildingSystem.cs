@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
-using static UnityEditor.PlayerSettings;
 
 [ExecuteInEditMode]
 public class GridBuildingSystem : Singletone<GridBuildingSystem>
@@ -15,13 +13,17 @@ public class GridBuildingSystem : Singletone<GridBuildingSystem>
     [SerializeField] private Tile _GreenTile;
     [SerializeField] private Tile _RedTile;
     [SerializeField] private MapBounds _mapBounds;
+    [SerializeField] private GameSettings _settings;
     public List<Vector3Int> OccupedFields { get; private set; }
 
     private void Start()
     {
         _map.ClearAllTiles();
         OccupedFields = SaveSystem.GetOccupedFields();
-        print(OccupedFields);
+        foreach (var item in _settings.ClampedPositions)
+        {
+            OccupedFields.Add(item);
+        }
     }
 
     public void ShowBuildingGreed()
