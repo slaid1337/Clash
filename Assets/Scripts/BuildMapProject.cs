@@ -1,5 +1,4 @@
 using DG.Tweening;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
@@ -22,6 +21,11 @@ public class BuildMapProject : MonoBehaviour, IPointerClickHandler
 
     public void Build()
     {
+        _tilemap.SetTile(BuildingGrid.Instance.Grid.WorldToCell(transform.position), _grassTile);
+
+
+
+        Destroy(gameObject);
     }
 
     public void OpenUI()

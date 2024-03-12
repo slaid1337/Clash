@@ -50,11 +50,11 @@ public class BuildingSystem : Singletone<BuildingSystem>
         CloseBuildButtons();
     }
 
-    public void NewBuilding(GameObject prefab, BuildingObject buildingObject)
+    public void NewBuilding(GameObject prefab, BuildingObject buildingObject, int cost)
     {
         _buildButton.onClick.RemoveAllListeners();
         _breakButton.onClick.RemoveAllListeners();
-        _buildButton.onClick.AddListener(AcceptNewBuilding);
+        _buildButton.onClick.AddListener(delegate { AcceptNewBuilding(cost); });
         _breakButton.onClick.AddListener(BreakNewBuilding);
 
         Building building = Instantiate(prefab).GetComponent<Building>();
@@ -66,8 +66,23 @@ public class BuildingSystem : Singletone<BuildingSystem>
         _shopMenu.ClosePanel();
     }
 
-    public void AcceptNewBuilding()
+    public void NewBuildingProject(GameObject prefab, BuildingObject buildingObject, int cost)
     {
+        _buildButton.onClick.RemoveAllListeners();
+        _breakButton.onClick.RemoveAllListeners();
+        _buildButton.onClick.AddListener(delegate { AcceptNewBuilding(cost); });
+        _breakButton.onClick.AddListener(BreakNewBuilding);
+
+        Building building = Instantiate(prefab).GetComponent<Building>();
+        building.UpdateBuildingObject(buildingObject);
+        OpenBuildButtons();
+        _currentBuilding = building;
+        _shopMenu.ClosePanel();
+    }
+
+    public void AcceptNewBuilding(int cost)
+    {
+        SaveSystem.SpendMoney(cost);
         AcceptBuilding();
     }
 

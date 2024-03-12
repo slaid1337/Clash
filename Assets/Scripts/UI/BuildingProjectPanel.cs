@@ -87,5 +87,7 @@ public class BuildingProjectPanel : MonoBehaviour
     void Build()
     {
         _buildingMapProject.Build();
+
+        BuildingSystem.Instance.NewBuildingProject(_buildingObject.Prefab, _buildingObject, _shopItem.Cost);
     }
 }

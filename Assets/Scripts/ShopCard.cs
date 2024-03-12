@@ -20,7 +20,7 @@ public class ShopCard : MonoBehaviour
         _buyBtn.onClick.AddListener(
             delegate 
             { 
-                BuildingSystem.Instance.NewBuilding(BuildingObject.Prefab, BuildingObject);
+                BuildingSystem.Instance.NewBuilding(BuildingObject.Prefab, BuildingObject, ShopItem.Cost);
             });
 
         _image.sprite = ShopItem.ActiveSprite;

@@ -27,8 +27,6 @@ public class BuildingSpawner : Singletone<BuildingSpawner>
                 }
             }
         }
-
-        
     }
 
     public void SaveBuildings()

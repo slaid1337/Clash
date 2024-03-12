@@ -16,23 +16,23 @@ MonoBehaviour:
   - Name: Mine
     Income: 50
     Capacity: 50
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 3539576377058137639, guid: 368612c85c5821c49b878dcd45ceb446, type: 3}
   - Name: House1
     Income: 75
     Capacity: 75
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 845538851579902863, guid: ae1700bba57d92c4f94a7d7e4c89296f, type: 3}
   - Name: House2
     Income: 100
     Capacity: 125
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 7895932138837319243, guid: 14dcd879ac8b8ff49b364d2b024d1b7f, type: 3}
   - Name: Market
     Income: 250
     Capacity: 300
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 2076686820157546991, guid: d7e83f5cc4e62ab4ba8095b10ad4436c, type: 3}
   - Name: House3
     Income: 400
     Capacity: 1000
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 5657353836841430593, guid: 8a827ded3e81fe14e9b6874cd047fd03, type: 3}
   - Name: Mill
     Income: 1000
     Capacity: 3000
@@ -40,4 +40,4 @@ MonoBehaviour:
   - Name: Tower
     Income: 2000
     Capacity: 10000
-    Prefab: {fileID: 0}
+    Prefab: {fileID: 4626221206405420372, guid: 43dd19d2e649a4143b561d64c223dcf5, type: 3}
