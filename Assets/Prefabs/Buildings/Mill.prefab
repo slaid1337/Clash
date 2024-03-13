@@ -133,7 +133,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d4823794842d61438986548e0203857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _grid: {fileID: 0}
 --- !u!60 &7283972577522274077
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -212,6 +211,9 @@ MonoBehaviour:
   Bounds: {x: 1, y: 1}
   _panel: {fileID: 2367935776510406697}
   _buildSprite: {fileID: 485092283786088038}
+  _buildingObjects: {fileID: 11400000, guid: b75b413286bea734bb397fadbaffcb3c, type: 2}
+  _flag: {fileID: 2030595326538992220}
+  Name: 
 --- !u!1001 &2366003329156350868
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -313,6 +315,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 778a1abb4cf42f842b68c566fc2599e1, type: 3}
+--- !u!1 &2030595326538992220 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4394287069911665096, guid: 778a1abb4cf42f842b68c566fc2599e1, type: 3}
+  m_PrefabInstance: {fileID: 2366003329156350868}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2367935776510406697 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2571160597754813, guid: 778a1abb4cf42f842b68c566fc2599e1, type: 3}
