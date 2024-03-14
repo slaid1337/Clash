@@ -9,7 +9,7 @@ public class BuildingProjectPanel : MonoBehaviour
     [SerializeField] private ShopItem _shopItem;
     [SerializeField] private BuildingObjects _buildingObjects;
     [SerializeField] private Button _buyButton;
-    private BuildingObject _buildingObject;
+    public BuildingObject BuildingObject;
     [SerializeField] private BuildMapProject _buildingMapProject;
     [SerializeField] private TMP_Text _costText;
     [SerializeField] private TMP_Text _incomeText;
@@ -30,16 +30,18 @@ public class BuildingProjectPanel : MonoBehaviour
         {
             if (_shopItem.Name == item.Name)
             {
-                _buildingObject = item;
+                BuildingObject = item;
                 break;
             }
         }
 
         _costText.text = _shopItem.Cost.ToString();
-        _incomeText.text = _buildingObject.Income.ToString();
+        _incomeText.text = BuildingObject.Income.ToString();
         _lvlText.text = "Level " + _shopItem.LevelOpens[0].Level.ToString();
         _buyButton.onClick.AddListener(Build);
+
         SaveSystem.OnLvlChenged += OnLvlChenge;
+        SaveSystem.OnMoneyChenged += OnMoneyChenge;
 
         if ( LvlController.Instance.GetCurrentLevel() < _shopItem.LevelOpens[0].Level)
         {
@@ -51,6 +53,8 @@ public class BuildingProjectPanel : MonoBehaviour
             _buyButton.interactable = true;
             _blockPanel.SetActive(false);
         }
+
+        OnMoneyChenge(SaveSystem.GetMoney());
     }
 
     private void Update()
@@ -65,9 +69,22 @@ public class BuildingProjectPanel : MonoBehaviour
         }
     }
 
+    private void OnMoneyChenge(int money)
+    {
+        if (money >= _shopItem.Cost)
+        {
+            _buyButton.interactable = true;
+        }
+        else
+        {
+            _buyButton.interactable = false;
+        }
+    }
+
     private void OnDestroy()
     {
         SaveSystem.OnLvlChenged -= OnLvlChenge;
+        SaveSystem.OnMoneyChenged -= OnMoneyChenge;
     }
 
     private void OnLvlChenge(int lvl)
@@ -87,7 +104,7 @@ public class BuildingProjectPanel : MonoBehaviour
     void Build()
     {
         _buildingMapProject.Build();
-
-        BuildingSystem.Instance.NewBuildingProject(_buildingObject.Prefab, _buildingObject, _shopItem.Cost);
+        SaveSystem.SpendMoney(_shopItem.Cost);
+       //BuildingSystem.Instance.NewBuildingProject(BuildingObject.Prefab, BuildingObject, _shopItem.Cost);
     }
 }

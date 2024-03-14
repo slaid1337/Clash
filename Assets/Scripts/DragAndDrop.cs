@@ -101,9 +101,8 @@ public class DragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                 positions.Add(newPosition);
             }
         }
-        print(positions.Count);
-        print(GridBuildingSystem.Instance.CheckOccupation(positions.ToArray()));
-        if (GridBuildingSystem.Instance.CheckOccupation(positions.ToArray()))
+        print(pos);
+        if (pos != GetComponent<Building>().StartPosition && GridBuildingSystem.Instance.CheckOccupation(positions.ToArray()))
         {
             tileType = TileType.Red;
             BuildingSystem.Instance.DisableBuildButton();

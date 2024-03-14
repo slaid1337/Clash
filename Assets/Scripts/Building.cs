@@ -140,6 +140,10 @@ public class Building : MonoBehaviour, IPointerClickHandler
         StartPosition = save.Position;
         Position = StartPosition;
 
+        Vector3 newPos = GridBuildingSystem.Instance.Grid.GetCellCenterWorld(StartPosition);
+
+        transform.position = new Vector3(newPos.x, newPos.y, 0f);
+
         StartCoroutine(AddMoney(_moneyPerSecond));
     }
 
@@ -187,5 +191,10 @@ public class Building : MonoBehaviour, IPointerClickHandler
 
         _panel.UpdateInfo(_buildingObject.Income,(int) _currentMoney, _buildingObject.Capacity);
         StartCoroutine(AddMoney(moneyPerSecond));
+    }
+
+    public BuildingSave GetSave()
+    {
+        return new BuildingSave();
     }
 }

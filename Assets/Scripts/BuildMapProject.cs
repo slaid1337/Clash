@@ -22,8 +22,10 @@ public class BuildMapProject : MonoBehaviour, IPointerClickHandler
     public void Build()
     {
         _tilemap.SetTile(BuildingGrid.Instance.Grid.WorldToCell(transform.position), _grassTile);
+        print(BuildingGrid.Instance.Grid.WorldToCell(transform.position));
+        BuildingSpawner.Instance.SpawnNewBuild(_buildingProjectPanel.BuildingObject, BuildingGrid.Instance.Grid.LocalToCell(transform.position));
 
-
+        SaveSystem.SetBuildProject(_name);
 
         Destroy(gameObject);
     }

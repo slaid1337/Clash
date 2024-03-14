@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LvlController : Singletone<LvlController>
 {
@@ -10,8 +11,12 @@ public class LvlController : Singletone<LvlController>
     private int _currentLvl;
     private float _startFill;
 
-    private void Awake()
+    public UnityEvent OnLvlUp;
+
+    public override void Awake()
     {
+        base.Awake();
+
         _currentLvl = SaveSystem.GetLvl();
         _startFill = _lvlFill.sizeDelta.x;
         UpdateLvl(_currentLvl);
@@ -24,6 +29,8 @@ public class LvlController : Singletone<LvlController>
         {
             if (lvl < _lvlObject.Experience[i])
             {
+                if (int.Parse(_lvlNumber.text) != lvl) OnLvlUp?.Invoke();
+
                 _lvlNumber.text = (i).ToString();
                 _lvltext.text = lvl + "/" + _lvlObject.Experience[i];
                 _lvlFill.sizeDelta = new Vector2(Mathf.Lerp(0, _startFill, Mathf.InverseLerp(_lvlObject.Experience[i-1], _lvlObject.Experience[i], lvl)), _lvlFill.sizeDelta.y);
@@ -32,6 +39,8 @@ public class LvlController : Singletone<LvlController>
             }
             else if (lvl == _lvlObject.Experience[i])
             {
+                if (int.Parse(_lvlNumber.text) != lvl) OnLvlUp?.Invoke();
+
                 _lvlNumber.text = (i + 1).ToString();
                 _lvltext.text = 0 + "/" + _lvlObject.Experience[i + 1];
                 _lvlFill.sizeDelta = new Vector2(Mathf.Lerp(0, _startFill, Mathf.InverseLerp(_lvlObject.Experience[i], _lvlObject.Experience[i + 1], lvl)), _lvlFill.sizeDelta.y);

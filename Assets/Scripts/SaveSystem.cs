@@ -43,7 +43,7 @@ public static class SaveSystem
     /// <returns>деньги</returns>
     public static int GetMoney()
     {
-        return PlayerPrefs.GetInt("Money", 90);
+        return PlayerPrefs.GetInt("Money", 6000);
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ public static class SaveSystem
 
     public static int GetLvl()
     {
-        return PlayerPrefs.GetInt("Lvl", 6000);
+        return PlayerPrefs.GetInt("Lvl", 7000);
     }
 
     public static void SetLvl(int lvl)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class BuildingSpawner : Singletone<BuildingSpawner>
 {
@@ -27,6 +28,21 @@ public class BuildingSpawner : Singletone<BuildingSpawner>
                 }
             }
         }
+    }
+
+    public Building SpawnNewBuild(BuildingObject buildingObject, Vector3Int position)
+    {
+        Building building = Instantiate(buildingObject.Prefab).GetComponent<Building>();
+        BuildingSave newSave = new BuildingSave();
+        newSave.Position = position;
+        newSave.Name = buildingObject.Name;
+        newSave.Money = 0;
+        _buildings.Add(building);
+        building.OnLoad(newSave);
+
+        SaveBuildings();
+
+        return building;
     }
 
     public void SaveBuildings()
