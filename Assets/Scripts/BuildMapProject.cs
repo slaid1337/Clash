@@ -9,23 +9,30 @@ public class BuildMapProject : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Tilemap _tilemap;
     [SerializeField] private Tile _grassTile;
     [SerializeField] private BuildingProjectPanel _buildingProjectPanel;
+    public Vector3Int Position;
 
-    private void Awake()
+    private void Start()
     {
         if (SaveSystem.CheckOnBuidProject(_name))
         {
             _tilemap.SetTile(BuildingGrid.Instance.Grid.WorldToCell(transform.position), _grassTile);
             Destroy(gameObject);
         }
+        else
+        {
+            GridBuildingSystem.Instance.AddOccupedField(Position);
+        }
     }
 
     public void Build()
     {
         _tilemap.SetTile(BuildingGrid.Instance.Grid.WorldToCell(transform.position), _grassTile);
-        print(BuildingGrid.Instance.Grid.WorldToCell(transform.position));
-        BuildingSpawner.Instance.SpawnNewBuild(_buildingProjectPanel.BuildingObject, BuildingGrid.Instance.Grid.LocalToCell(transform.position));
+        
+        BuildingSpawner.Instance.SpawnNewBuild(_buildingProjectPanel.BuildingObject, new Vector3Int[] { Position }, BuildingGrid.Instance.Grid.LocalToCell(transform.position));
 
         SaveSystem.SetBuildProject(_name);
+
+        GridBuildingSystem.Instance.RemoveOccupedField(Position);
 
         Destroy(gameObject);
     }

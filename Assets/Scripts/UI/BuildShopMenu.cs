@@ -1,6 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class BuildShopMenu : MonoBehaviour
 {
@@ -9,11 +10,16 @@ public class BuildShopMenu : MonoBehaviour
     [SerializeField] private Transform _shopContent;
     [SerializeField] private GameObject _itemPrefab;
     [SerializeField] private ShopItems _items;
+    private List<ShopCard> _cards;
+    private float _startPosX;
 
     private void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();
-        _rectTransform.DOAnchorPosX((Screen.width / 2) + (_rectTransform.sizeDelta.x / 2), 0f);
+
+        _startPosX = _rectTransform.anchoredPosition.x;
+
+        _cards = new List<ShopCard>();
 
         foreach (var item in _items.shopItems)
         {
@@ -21,8 +27,15 @@ public class BuildShopMenu : MonoBehaviour
 
             card.ShopItem = item;
 
-            card.BuildingObject = _items.buildingObjects.objects[5];
-
+            foreach (var building in _items.buildingObjects.objects)
+            {
+                if (building.Name == item.Name)
+                {
+                    card.BuildingObject = building;
+                    break;
+                }
+            }
+            _cards.Add(card);
             card.Refresh();
         }
     }
@@ -31,13 +44,16 @@ public class BuildShopMenu : MonoBehaviour
     {
         _rectTransform.DOAnchorPosX(0f, 0.7f);
         _background.DOColor(new Color(0, 0, 0, 0.8f), 0.6f);
+
+        foreach (var item in _cards)
+        {
+            item.Refresh();
+        }
     }
 
     public void ClosePanel()
     {
-        _rectTransform.DOAnchorPosX((Screen.width / 2) + (_rectTransform.sizeDelta.x / 2), 0.3f);
+        _rectTransform.DOAnchorPosX(_startPosX, 0.3f);
         _background.DOColor(new Color(0, 0, 0, 0), 0.3f);
     }
-
-
 }

@@ -26,6 +26,7 @@ MonoBehaviour:
       Count: 5
     Name: Mine
     Cost: 50
+    Level: 50
   - ActiveSprite: {fileID: 21300000, guid: 64b2e65728bbac849a04bbe0d744dd39, type: 3}
     DisabledSprite: {fileID: 21300000, guid: f3591579cea4fbe4f80d569a051874f9, type: 3}
     LevelOpens:
@@ -37,6 +38,7 @@ MonoBehaviour:
       Count: 4
     Name: House1
     Cost: 100
+    Level: 75
   - ActiveSprite: {fileID: 21300000, guid: 98b1e61f51f921f4fa0e662ccaf33178, type: 3}
     DisabledSprite: {fileID: 21300000, guid: c6fcfd1bda6b5fb439d6f77f9612f74d, type: 3}
     LevelOpens:
@@ -48,6 +50,7 @@ MonoBehaviour:
       Count: 3
     Name: House2
     Cost: 200
+    Level: 150
   - ActiveSprite: {fileID: 21300000, guid: 6f503c81d5a437b4ab02b73cf481591e, type: 3}
     DisabledSprite: {fileID: 21300000, guid: 0b3cf803a24c423448c4f46dba4efae3, type: 3}
     LevelOpens:
@@ -57,6 +60,7 @@ MonoBehaviour:
       Count: 2
     Name: Market
     Cost: 500
+    Level: 250
   - ActiveSprite: {fileID: 21300000, guid: 867026455c665be45b0c9b45f6b4b337, type: 3}
     DisabledSprite: {fileID: 21300000, guid: fe70b24de89aa8b49b3ab00493d470d2, type: 3}
     LevelOpens:
@@ -66,6 +70,7 @@ MonoBehaviour:
       Count: 2
     Name: House3
     Cost: 800
+    Level: 350
   - ActiveSprite: {fileID: 21300000, guid: 330ce920bd64cc24ebdfdfc34e86a685, type: 3}
     DisabledSprite: {fileID: 21300000, guid: 60eb39119d462ba4da1865a0f800ae8b, type: 3}
     LevelOpens:
@@ -75,4 +80,5 @@ MonoBehaviour:
       Count: 2
     Name: Mill
     Cost: 1500
+    Level: 500
   buildingObjects: {fileID: 11400000, guid: b75b413286bea734bb397fadbaffcb3c, type: 2}

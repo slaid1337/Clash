@@ -102,6 +102,32 @@ public class GridBuildingSystem : Singletone<GridBuildingSystem>
         return false;
     }
 
+    public void AddOccupedField(Vector3Int[] field)
+    {
+        foreach (var item in field)
+        {
+            OccupedFields.Add(item);
+        }
+    }
+
+    public void AddOccupedField(Vector3Int field)
+    {
+        OccupedFields.Add(field);
+    }
+
+    public void RemoveOccupedField(Vector3Int field)
+    {
+        OccupedFields.Remove(field);
+    }
+
+    public void RemoveOccupedField(Vector3Int[] field)
+    {
+        foreach (var item in field)
+        {
+            OccupedFields.Remove(item);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Vector2 mapSize = new Vector2(Mathf.Abs(_mapBounds.TopLeft.x) + Mathf.Abs(_mapBounds.BottomLeft.x), Mathf.Abs(_mapBounds.TopLeft.y) + Mathf.Abs(_mapBounds.TopRight.y));

@@ -16,6 +16,7 @@ public class ShopItem
     public LevelOpen[] LevelOpens;
     public string Name;
     public int Cost;
+    public int Level;
 }
 
 [Serializable]

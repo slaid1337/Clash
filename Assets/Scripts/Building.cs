@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Building : MonoBehaviour, IPointerClickHandler
 {
@@ -62,12 +63,24 @@ public class Building : MonoBehaviour, IPointerClickHandler
         CloseUI(longest:0f);
     }
 
-    public void StopBuilding(Vector3Int position)
+    public void AcceptMove(Vector3Int position)
     {
         _dragAndDrop.CanDrag = false;
+        GridBuildingSystem.Instance.RemoveOccupedField(GetPositions().ToArray());
+        StartPosition = position;
+        GridBuildingSystem.Instance.AddOccupedField(GetPositions().ToArray());
+        UpdatePosition(StartPosition);
+        BuildingSpawner.Instance.SaveBuildings();
+        GridBuildingSystem.Instance.HideBuildingGreed();
+    }
+
+    public void AcceptNewMove(Vector3Int position)
+    {
+        _dragAndDrop.CanDrag = false;
+
         StartPosition = position;
         UpdatePosition(StartPosition);
-
+        BuildingSpawner.Instance.AddBuilding(this, _buildingObject, GetPositions().ToArray(), StartPosition);
         GridBuildingSystem.Instance.HideBuildingGreed();
     }
 
@@ -114,6 +127,8 @@ public class Building : MonoBehaviour, IPointerClickHandler
         _panel.UpdateInfo(_buildingObject.Income, (int)_currentMoney, _buildingObject.Capacity);
         _flag.SetActive(false);
         _currentMoney = 0;
+
+        BuildingSpawner.Instance.SaveBuildings();
     }
     
     public void OnLoad(BuildingSave save)
@@ -137,7 +152,7 @@ public class Building : MonoBehaviour, IPointerClickHandler
         _moneyPerSecond = (float)_buildingObject.Income / 60;
 
         _currentMoney = save.Money;
-        StartPosition = save.Position;
+        StartPosition = save.SpawnPosition;
         Position = StartPosition;
 
         Vector3 newPos = GridBuildingSystem.Instance.Grid.GetCellCenterWorld(StartPosition);
@@ -193,8 +208,20 @@ public class Building : MonoBehaviour, IPointerClickHandler
         StartCoroutine(AddMoney(moneyPerSecond));
     }
 
-    public BuildingSave GetSave()
+    public List<Vector3Int> GetPositions()
     {
-        return new BuildingSave();
+
+        List<Vector3Int> positions = new List<Vector3Int>();
+
+        for (int i = 0; i < Bounds.x; i++)
+        {
+            for (int j = 0; j < Bounds.y; j++)
+            {
+                Vector3Int newPosition = new Vector3Int(StartPosition.x + i, StartPosition.y + j, StartPosition.z);
+                positions.Add(newPosition);
+            }
+        }
+
+        return positions;
     }
 }

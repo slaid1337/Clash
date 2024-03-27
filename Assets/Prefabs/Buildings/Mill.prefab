@@ -213,7 +213,7 @@ MonoBehaviour:
   _buildSprite: {fileID: 485092283786088038}
   _buildingObjects: {fileID: 11400000, guid: b75b413286bea734bb397fadbaffcb3c, type: 2}
   _flag: {fileID: 2030595326538992220}
-  Name: 
+  Name: Mill
 --- !u!1001 &2366003329156350868
 PrefabInstance:
   m_ObjectHideFlags: 0

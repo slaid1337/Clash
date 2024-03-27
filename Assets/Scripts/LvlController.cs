@@ -9,8 +9,9 @@ public class LvlController : Singletone<LvlController>
     [SerializeField] private RectTransform _lvlFill;
     [SerializeField] private LvlObject _lvlObject;
     private int _currentLvl;
+    private int _currentLvlNumber;
     private float _startFill;
-
+    [SerializeField] protected ParticleSystem _particleSystem;
     public UnityEvent OnLvlUp;
 
     public override void Awake()
@@ -19,8 +20,35 @@ public class LvlController : Singletone<LvlController>
 
         _currentLvl = SaveSystem.GetLvl();
         _startFill = _lvlFill.sizeDelta.x;
-        UpdateLvl(_currentLvl);
-        SaveSystem.OnLvlChenged += UpdateLvl;
+        UpdateLvl();
+        SaveSystem.OnLvlChenged += UpdateLvl ;
+    }
+
+    private void UpdateLvl()
+    {
+        for (int i = 0; i < _lvlObject.Experience.Length; i++)
+        {
+            if (_currentLvl < _lvlObject.Experience[i])
+            {
+                _currentLvlNumber = i;
+
+                _lvlNumber.text = (i).ToString();
+                _lvltext.text = _currentLvl + "/" + _lvlObject.Experience[i];
+                _lvlFill.sizeDelta = new Vector2(Mathf.Lerp(0, _startFill, Mathf.InverseLerp(_lvlObject.Experience[i - 1], _lvlObject.Experience[i], _currentLvl)), _lvlFill.sizeDelta.y);
+                _currentLvl = i;
+                return;
+            }
+            else if (_currentLvl == _lvlObject.Experience[i])
+            {
+                _currentLvlNumber = i + 1;
+
+                _lvlNumber.text = (i + 1).ToString();
+                _lvltext.text = 0 + "/" + _lvlObject.Experience[i + 1];
+                _lvlFill.sizeDelta = new Vector2(Mathf.Lerp(0, _startFill, Mathf.InverseLerp(_lvlObject.Experience[i], _lvlObject.Experience[i + 1], _currentLvl)), _lvlFill.sizeDelta.y);
+                _currentLvl = i + 1;
+                return;
+            }
+        }
     }
 
     private void UpdateLvl(int lvl)
@@ -29,7 +57,13 @@ public class LvlController : Singletone<LvlController>
         {
             if (lvl < _lvlObject.Experience[i])
             {
-                if (int.Parse(_lvlNumber.text) != lvl) OnLvlUp?.Invoke();
+                if (_currentLvlNumber != i)
+                {
+                    OnLvlUp?.Invoke();
+                    print("new lvl");
+                }
+
+                _currentLvlNumber = i;
 
                 _lvlNumber.text = (i).ToString();
                 _lvltext.text = lvl + "/" + _lvlObject.Experience[i];
@@ -39,7 +73,13 @@ public class LvlController : Singletone<LvlController>
             }
             else if (lvl == _lvlObject.Experience[i])
             {
-                if (int.Parse(_lvlNumber.text) != lvl) OnLvlUp?.Invoke();
+                if (_currentLvlNumber != i + 1)
+                {
+                    OnLvlUp?.Invoke();
+                    print("new lvl");
+                }
+
+                _currentLvlNumber = i + 1;
 
                 _lvlNumber.text = (i + 1).ToString();
                 _lvltext.text = 0 + "/" + _lvlObject.Experience[i + 1];

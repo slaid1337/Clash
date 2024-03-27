@@ -91,6 +91,7 @@ public class DragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
             tileType = TileType.Red;
             BuildingSystem.Instance.DisableBuildButton();
         }
+
         List<Vector3Int> positions = new List<Vector3Int>();
 
         for (int i = 0; i < _bounds.x; i++)
@@ -101,7 +102,7 @@ public class DragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                 positions.Add(newPosition);
             }
         }
-        print(pos);
+        
         if (pos != GetComponent<Building>().StartPosition && GridBuildingSystem.Instance.CheckOccupation(positions.ToArray()))
         {
             tileType = TileType.Red;
@@ -110,7 +111,7 @@ public class DragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
 
         Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        transform.position =  new Vector3(newPos.x, newPos.y, 0f);
+        transform.position = new Vector3(newPos.x, newPos.y, 0f);
         for (int i = -1; i < _bounds.x + 1; i++)
         {
             for (int j = -1; j < _bounds.y + 1; j++)

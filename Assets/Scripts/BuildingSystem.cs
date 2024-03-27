@@ -1,15 +1,21 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine.Events;
 
 public class BuildingSystem : Singletone<BuildingSystem>
 {
     private Building _currentBuilding;
     [SerializeField] private RectTransform _mainButtons;
     [SerializeField] private RectTransform _buildButtons;
+    [SerializeField] private QuestPanel _questMenu;
     [SerializeField] private Button _buildButton;
     [SerializeField] private Button _breakButton;
     [SerializeField] private BuildShopMenu _shopMenu;
+
+    public UnityEvent<string> OnBuildNewBuilding;
 
     public void BreakBuilding()
     {
@@ -19,7 +25,7 @@ public class BuildingSystem : Singletone<BuildingSystem>
 
     public void AcceptBuilding()
     {
-        _currentBuilding.StopBuilding(_currentBuilding.Position);
+        _currentBuilding.AcceptMove(_currentBuilding.Position);
         StopBuilding();
     }
 
@@ -50,11 +56,11 @@ public class BuildingSystem : Singletone<BuildingSystem>
         CloseBuildButtons();
     }
 
-    public void NewBuilding(GameObject prefab, BuildingObject buildingObject, int cost)
+    public void NewBuilding(GameObject prefab, BuildingObject buildingObject, int cost, int lvl)
     {
         _buildButton.onClick.RemoveAllListeners();
         _breakButton.onClick.RemoveAllListeners();
-        _buildButton.onClick.AddListener(delegate { AcceptNewBuilding(cost); });
+        _buildButton.onClick.AddListener(delegate { AcceptNewBuilding(cost); SaveSystem.AddLvl(lvl); });
         _breakButton.onClick.AddListener(BreakNewBuilding);
 
         Building building = Instantiate(prefab).GetComponent<Building>();
@@ -83,12 +89,13 @@ public class BuildingSystem : Singletone<BuildingSystem>
     public void AcceptNewBuilding(int cost)
     {
         SaveSystem.SpendMoney(cost);
-        AcceptBuilding();
+        _currentBuilding.AcceptNewMove(_currentBuilding.Position);
+        OnBuildNewBuilding?.Invoke(_currentBuilding.Name);
+        StopBuilding();
     }
 
     public void BreakNewBuilding()
     {
-        print(_currentBuilding);
         Destroy(_currentBuilding.gameObject);
         _currentBuilding = null;
         CloseBuildButtons();
@@ -98,6 +105,8 @@ public class BuildingSystem : Singletone<BuildingSystem>
     public void OpenBuildButtons()
     {
         Sequence sequence = DOTween.Sequence();
+
+        _questMenu.ClosePanel();
 
         sequence.Append(_mainButtons.DOAnchorPosY(-_mainButtons.sizeDelta.y, 0.2f));
         sequence.Append(_buildButtons.DOAnchorPosY(0f, 0.3f));
@@ -109,5 +118,21 @@ public class BuildingSystem : Singletone<BuildingSystem>
 
         sequence.Append(_buildButtons.DOAnchorPosY(-_buildButtons.sizeDelta.y, 0.2f));
         sequence.Append(_mainButtons.DOAnchorPosY(0f, 0.3f));
+    }
+
+    public List<Building> GetSpawnedBuildingsByName(string name)
+    {
+        List<Building> buildings = FindObjectsByType<Building>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
+        List<Building> result = new List<Building>();
+
+        foreach (Building b in buildings)
+        {
+            if (b.Name == name)
+            {
+                result.Add(b);
+            }
+        }
+
+        return result;
     }
 }

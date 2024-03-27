@@ -14,17 +14,78 @@ public class ShopCard : MonoBehaviour
     public ShopItem ShopItem;
     public BuildingObject BuildingObject;
 
+    private void Start()
+    {
+        SaveSystem.OnMoneyChenged += CheckOnBuy;
+
+        _buyBtn.onClick.AddListener(Build);
+    }
 
     public void Refresh()
     {
-        _buyBtn.onClick.AddListener(
-            delegate 
-            { 
-                BuildingSystem.Instance.NewBuilding(BuildingObject.Prefab, BuildingObject, ShopItem.Cost);
-            });
-
         _image.sprite = ShopItem.ActiveSprite;
         _costText.text = ShopItem.Cost.ToString();
-        _countText.text = "0/" + ShopItem.LevelOpens[0].Count.ToString();
+        _lvlText.text = ShopItem.LevelOpens[0].Level.ToString();
+        CheckOnBuildable(SaveSystem.GetMoney());
+    }
+
+    private void Build()
+    {
+        BuildingSystem.Instance.NewBuilding(BuildingObject.Prefab, BuildingObject, ShopItem.Cost, ShopItem.Level);
+    }
+
+    private void OnDestroy()
+    {
+        SaveSystem.OnMoneyChenged -= CheckOnBuy;
+    }
+
+    private void CheckOnBuy(int money)
+    {
+        CheckOnBuildable(money);
+    }
+
+    private void CheckOnBuildable(int money)
+    {
+        int lvlIndex = 0;
+        int lvl = LvlController.Instance.GetCurrentLevel();
+        int Count = BuildingSystem.Instance.GetSpawnedBuildingsByName(BuildingObject.Name).Count;
+
+        for (int i = ShopItem.LevelOpens.Length - 1; i > 0; i--)
+        {;
+            if (lvl >= ShopItem.LevelOpens[i].Level)
+            {
+                lvlIndex = i;
+                
+                break;
+            }
+        }
+
+        _countText.text = Count + "/" + ShopItem.LevelOpens[lvlIndex].Count.ToString();
+
+        if (lvl >= ShopItem.LevelOpens[lvlIndex].Level)
+        {
+            if (Count < ShopItem.LevelOpens[lvlIndex].Count)
+            {
+                if (money >= ShopItem.Cost)
+                {
+                    _buyBtn.interactable = true;
+                }
+                else
+                {
+                    _buyBtn.interactable = false;
+                }
+            }
+            else
+            {
+                _buyBtn.interactable = false;
+            }
+            _image.sprite = ShopItem.ActiveSprite;
+            _shadowOverlay.SetActive(false);
+        }
+        else
+        {
+            _image.sprite = ShopItem.DisabledSprite;
+            _shadowOverlay.SetActive(true);
+        }
     }
 }

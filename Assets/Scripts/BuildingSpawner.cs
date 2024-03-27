@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class BuildingSpawner : Singletone<BuildingSpawner>
 {
@@ -10,6 +9,7 @@ public class BuildingSpawner : Singletone<BuildingSpawner>
     private void Start()
     {
         List<BuildingSave> saves = SaveSystem.GetBuildingSaves();
+        
         _buildings = new List<Building>();
 
         if (saves != null)
@@ -30,19 +30,36 @@ public class BuildingSpawner : Singletone<BuildingSpawner>
         }
     }
 
-    public Building SpawnNewBuild(BuildingObject buildingObject, Vector3Int position)
+    public Building SpawnNewBuild(BuildingObject buildingObject, Vector3Int[] positions, Vector3Int spawnedPosition)
     {
         Building building = Instantiate(buildingObject.Prefab).GetComponent<Building>();
         BuildingSave newSave = new BuildingSave();
-        newSave.Position = position;
+
+        building.StartPosition = spawnedPosition;
+
+        newSave.Positions = building.GetPositions().ToArray();
+        newSave.SpawnPosition = spawnedPosition;
         newSave.Name = buildingObject.Name;
         newSave.Money = 0;
         _buildings.Add(building);
         building.OnLoad(newSave);
-
+        GridBuildingSystem.Instance.AddOccupedField(building.GetPositions().ToArray());
         SaveBuildings();
 
         return building;
+    }
+
+    public void AddBuilding(Building building, BuildingObject buildingObject, Vector3Int[] positions, Vector3Int spawnedPosition)
+    {
+        BuildingSave newSave = new BuildingSave();
+        newSave.Positions = positions;
+        newSave.SpawnPosition = spawnedPosition;
+        newSave.Name = buildingObject.Name;
+        newSave.Money = 0;
+        _buildings.Add(building);
+        building.OnLoad(newSave);
+        GridBuildingSystem.Instance.AddOccupedField(positions);
+        SaveBuildings();
     }
 
     public void SaveBuildings()
@@ -52,10 +69,10 @@ public class BuildingSpawner : Singletone<BuildingSpawner>
         foreach (var item in _buildings)
         {
             BuildingSave newSave = new BuildingSave();
-            newSave.Position = item.Position;
+            newSave.Positions = item.GetPositions().ToArray();
             newSave.Name = item.Name;
             newSave.Money = (int) item.Money;
-
+            newSave.SpawnPosition = item.StartPosition;
             saves.Add(newSave);
         }
 

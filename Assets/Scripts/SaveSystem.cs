@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Newtonsoft.Json;
+using UnityEngine.Rendering;
 
 public static class SaveSystem
 {
@@ -72,7 +72,10 @@ public static class SaveSystem
         {
             foreach (var item in saves)
             {
-                positions.Add(item.Position);
+                foreach (var position in item.Positions)
+                {
+                    positions.Add(position);
+                }
             }
         }
         else
@@ -99,10 +102,11 @@ public static class SaveSystem
         return PlayerPrefs.GetInt("Lvl", 7000);
     }
 
-    public static void SetLvl(int lvl)
+    public static void AddLvl(int lvl)
     {
-        PlayerPrefs.SetInt("Lvl", lvl);
-        OnLvlChenged?.Invoke(lvl);
+        int newLvl = GetLvl() + lvl;
+        PlayerPrefs.SetInt("Lvl", newLvl);
+        OnLvlChenged?.Invoke(newLvl);
     }
 
     public static void SetBuildingSaves(List<BuildingSave> save)
@@ -117,12 +121,37 @@ public static class SaveSystem
         string data = PlayerPrefs.GetString("BuildingData", "");
         return JsonConvert.DeserializeObject<List<BuildingSave>>(data);
     }
+
+    public static int GetQuestStage()
+    {
+        return PlayerPrefs.GetInt("QuestStage", 0);
+    }
+
+    public static void SetQuestStage(int stage)
+    {
+        PlayerPrefs.SetInt("QuestStage", stage);
+    }
+
+    public static bool IsQuestComplited(Quest quest)
+    {
+        string data = quest.BuildingName + quest.Exp + quest.Type;
+
+        return PlayerPrefs.GetInt("IsComlite" + data, 0) == 1;
+    }
+
+    public static void SetQuestComplited(Quest quest)
+    {
+        string data = quest.BuildingName + quest.Exp + quest.Type;
+
+        PlayerPrefs.SetInt("IsComlite" + data, 1);
+    }
 }
 
 [Serializable]
 public class BuildingSave
 {
-    public Vector3Int Position;
+    public Vector3Int[] Positions;
+    public Vector3Int SpawnPosition;
     public string Name;
     public int Money;
 }
