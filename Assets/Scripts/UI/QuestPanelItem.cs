@@ -1,3 +1,4 @@
+using Lean.Localization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,6 +10,15 @@ public class QuestPanelItem : MonoBehaviour
     [SerializeField] private TMP_Text _lvlText;
     [SerializeField] private Button _button;
     [SerializeField] private GameObject _buttonPanel;
+    public string OriginalText;
+
+    private void Start()
+    {
+        LeanLocalization.OnLocalizationChanged += delegate
+        {
+            _questText.text = LeanLocalization.GetTranslationText(OriginalText);
+        };
+    }
 
     public void UpdateText(string questText, string lvlText)
     {

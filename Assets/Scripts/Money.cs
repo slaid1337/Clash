@@ -1,3 +1,4 @@
+using Eiko.YaSDK;
 using TMPro;
 using UnityEngine;
 
@@ -19,9 +20,16 @@ public class Money : Singletone<Money>
         }
     }
 
-    private void Start()
+    public override void Awake()
     {
-        _money = SaveSystem.GetMoney();
+        base.Awake();
+
+        GameLoader.Instance.OnLoad.AddListener(OnLoad);
+    }
+
+    public  void OnLoad()
+    {
+        _money =  SaveSystem.GetMoney();
         Refresh(_money);
 
         SaveSystem.OnMoneyChenged += Refresh;
@@ -35,5 +43,36 @@ public class Money : Singletone<Money>
         {
             item.text = _money.ToString();
         }
+    }
+
+    public void GetMoneyForReward()
+    {
+        YandexSDK.instance.onRewardedAdReward += OnReward;
+        YandexSDK.instance.onRewardedAdError += OnRewardError;
+        YandexSDK.instance.onRewardedAdClosed += OnRewardClose;
+
+        YandexSDK.instance.ShowRewarded("");
+    }
+
+    public void OnReward(string str)
+    {
+        YandexSDK.instance.onRewardedAdReward -= OnReward;
+        YandexSDK.instance.onRewardedAdError -= OnRewardError;
+        YandexSDK.instance.onRewardedAdClosed -= OnRewardClose;
+
+        SaveSystem.AddMoney(50);
+    }
+
+    public void OnRewardError(string str)
+    {
+        YandexSDK.instance.onRewardedAdReward -= OnReward;
+        YandexSDK.instance.onRewardedAdError -= OnRewardError;
+        YandexSDK.instance.onRewardedAdClosed -= OnRewardClose;
+    }
+    public void OnRewardClose(int str)
+    {
+        YandexSDK.instance.onRewardedAdReward -= OnReward;
+        YandexSDK.instance.onRewardedAdError -= OnRewardError;
+        YandexSDK.instance.onRewardedAdClosed -= OnRewardClose;
     }
 }

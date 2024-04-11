@@ -15,6 +15,11 @@ public class BuildShopMenu : MonoBehaviour
 
     private void Awake()
     {
+        GameLoader.Instance.OnLoad.AddListener(OnLoad);
+    }
+
+    public void OnLoad()
+    {
         _rectTransform = GetComponent<RectTransform>();
 
         _startPosX = _rectTransform.anchoredPosition.x;
@@ -49,11 +54,15 @@ public class BuildShopMenu : MonoBehaviour
         {
             item.Refresh();
         }
+
+        _background.raycastTarget = true;
     }
 
     public void ClosePanel()
     {
         _rectTransform.DOAnchorPosX(_startPosX, 0.3f);
         _background.DOColor(new Color(0, 0, 0, 0), 0.3f);
+
+        _background.raycastTarget = false;
     }
 }

@@ -14,14 +14,19 @@ public class LvlController : Singletone<LvlController>
     [SerializeField] protected ParticleSystem _particleSystem;
     public UnityEvent OnLvlUp;
 
-    public override void Awake()
+    public override async void Awake()
     {
         base.Awake();
 
-        _currentLvl = SaveSystem.GetLvl();
+        GameLoader.Instance.OnLoad.AddListener(OnLoad);
+    }
+
+    public  void OnLoad()
+    {
+        _currentLvl =  SaveSystem.GetLvl();
         _startFill = _lvlFill.sizeDelta.x;
         UpdateLvl();
-        SaveSystem.OnLvlChenged += UpdateLvl ;
+        SaveSystem.OnLvlChenged += UpdateLvl;
     }
 
     private void UpdateLvl()

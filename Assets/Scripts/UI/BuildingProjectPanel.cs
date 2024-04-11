@@ -21,7 +21,7 @@ public class BuildingProjectPanel : MonoBehaviour
         get { return GetComponent<RectTransform>(); }
     }
 
-    private void Start()
+    private  void Start()
     {
         _panel = GetComponent<RectTransform>();
         _panel.DOScaleY(0f, 0f);
@@ -54,7 +54,7 @@ public class BuildingProjectPanel : MonoBehaviour
             _blockPanel.SetActive(false);
         }
 
-        OnMoneyChenge(SaveSystem.GetMoney());
+        OnMoneyChenge( SaveSystem.GetMoney());
     }
 
     private void Update()

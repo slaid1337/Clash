@@ -16,7 +16,15 @@ public class GridBuildingSystem : Singletone<GridBuildingSystem>
     [SerializeField] private GameSettings _settings;
     public List<Vector3Int> OccupedFields { get; private set; }
 
-    private void Start()
+
+    private void Awake()
+    {
+        base.Awake();
+
+        GameLoader.Instance.OnLoad.AddListener(OnLoad);
+    }
+
+    public void OnLoad()
     {
         _map.ClearAllTiles();
         OccupedFields = SaveSystem.GetOccupedFields();
@@ -128,6 +136,8 @@ public class GridBuildingSystem : Singletone<GridBuildingSystem>
         }
     }
 
+#if UNITY_EDITOR
+
     private void OnDrawGizmos()
     {
         Vector2 mapSize = new Vector2(Mathf.Abs(_mapBounds.TopLeft.x) + Mathf.Abs(_mapBounds.BottomLeft.x), Mathf.Abs(_mapBounds.TopLeft.y) + Mathf.Abs(_mapBounds.TopRight.y));
@@ -141,7 +151,9 @@ public class GridBuildingSystem : Singletone<GridBuildingSystem>
             }
         }
     }
+#endif
 }
+
 
 [Serializable]
 public struct MapBounds

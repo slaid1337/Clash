@@ -16,3 +16,21 @@ MonoBehaviour:
   - Type: 0
     BuildingName: Mine
     Exp: 25
+  - Type: 0
+    BuildingName: House1
+    Exp: 50
+  - Type: 0
+    BuildingName: House2
+    Exp: 50
+  - Type: 0
+    BuildingName: Market
+    Exp: 80
+  - Type: 0
+    BuildingName: House3
+    Exp: 100
+  - Type: 0
+    BuildingName: Mill
+    Exp: 150
+  - Type: 0
+    BuildingName: Tower
+    Exp: 200

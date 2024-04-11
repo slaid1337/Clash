@@ -21,12 +21,12 @@ public class ShopCard : MonoBehaviour
         _buyBtn.onClick.AddListener(Build);
     }
 
-    public void Refresh()
+    public  void Refresh()
     {
         _image.sprite = ShopItem.ActiveSprite;
         _costText.text = ShopItem.Cost.ToString();
         _lvlText.text = ShopItem.LevelOpens[0].Level.ToString();
-        CheckOnBuildable(SaveSystem.GetMoney());
+        CheckOnBuildable( SaveSystem.GetMoney());
     }
 
     private void Build()

@@ -18,9 +18,24 @@ public class QuestPanel : Singletone<QuestPanel>
     private List<QuestPanelItem> _questPanelItems;
     [SerializeField] private GameObject _notification;
 
+    public QuestObjects QuestObjects
+    {
+        get
+        {
+            return _questObjects;
+        }
+    }
+
     public RectTransform RectTransform { get { return GetComponent<RectTransform>(); } }
 
-    private void Start()
+    private void Awake()
+    {
+        base.Awake();
+
+        GameLoader.Instance.OnLoad.AddListener(OnLoad);
+    }
+
+    public void OnLoad()
     {
         _questPanelItems = new List<QuestPanelItem>();
 
@@ -28,25 +43,30 @@ public class QuestPanel : Singletone<QuestPanel>
 
         _startPosX = RectTransform.anchoredPosition.x;
 
-        _questStage = SaveSystem.GetQuestStage();
+        _questStage =  SaveSystem.GetQuestStage();
 
-        if (_questObjects.quests[_questStage].Type == QuestType.Building)
-        {
-            BuildingSystem.Instance.OnBuildNewBuilding.AddListener(OnBuildBuilding);
-        }
+
 
         if (_questStage < _questObjects.quests.Length)
         {
             QuestPanelItem panelItem = Instantiate(_prefab, _questContainer).GetComponent<QuestPanelItem>();
             _questPanelItems.Add(panelItem);
 
-            string text = "Build the " + _questObjects.quests[_questStage].BuildingName;
+            string text = Lean.Localization.LeanLocalization.GetTranslationText("Build the " + _questObjects.quests[_questStage].BuildingName);
 
             panelItem.UpdateText(text, "+ " + _questObjects.quests[_questStage].Exp);
+            panelItem.OriginalText = "Build the " + _questObjects.quests[_questStage].BuildingName;
 
-            if (SaveSystem.IsQuestComplited(_questObjects.quests[_questStage]))
+            if ( SaveSystem.IsQuestComplited(_questObjects.quests[_questStage]))
             {
                 _questPanelItems[0].SetToCollect(CollectReward);
+            }
+            else
+            {
+                if (_questObjects.quests[_questStage].Type == QuestType.Building)
+                {
+                    BuildingSystem.Instance.OnBuildNewBuilding.AddListener(OnBuildBuilding);
+                }
             }
         }
         else
@@ -62,13 +82,12 @@ public class QuestPanel : Singletone<QuestPanel>
             _questPanelItems[0].SetToCollect(CollectReward);
             _notification.SetActive(true);
             SaveSystem.SetQuestComplited(_questObjects.quests[_questStage]);
+            BuildingSystem.Instance.OnBuildNewBuilding.RemoveListener(OnBuildBuilding);
         }
     }
 
     public void CollectReward()
     {
-        BuildingSystem.Instance.OnBuildNewBuilding.RemoveListener(OnBuildBuilding);
-
         SaveSystem.AddLvl(_questObjects.quests[_questStage].Exp);
 
         _questStage++;
@@ -87,7 +106,7 @@ public class QuestPanel : Singletone<QuestPanel>
 
             _questPanelItems.Add(panelItem);
 
-            string text = "You have to build the " + _questObjects.quests[_questStage].BuildingName;
+            string text = Lean.Localization.LeanLocalization.GetTranslationText( "Build the " + _questObjects.quests[_questStage].BuildingName);
 
             panelItem.UpdateText(text, "+ " + _questObjects.quests[_questStage].Exp);
         }

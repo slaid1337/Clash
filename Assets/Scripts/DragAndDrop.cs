@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class DragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
@@ -17,7 +18,6 @@ public class DragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
     {
         GridBuildingSystem.Instance.ShowBuildingGreed();
         _bounds = GetComponent<Building>().Bounds;
-        UpdateDrag();
 
         if (newMove)
         {
@@ -47,12 +47,27 @@ public class DragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                     {
                         GridBuildingSystem.Instance.UpdateTile(new Vector3Int(pos.x + i, pos.y + j), TileType.Default);
                     }
-
                 }
             }
 
-            GetComponent<Building>().UpdatePosition();
+            List<Vector3Int> positions = new List<Vector3Int>();
 
+            for (int i = 0; i < _bounds.x; i++)
+            {
+                for (int j = 0; j < _bounds.y; j++)
+                {
+                    Vector3Int newPosition = new Vector3Int(pos.x + i, pos.y + j, pos.z);
+                    positions.Add(newPosition);
+                }
+            }
+
+            if (pos != GetComponent<Building>().StartPosition && GridBuildingSystem.Instance.CheckOccupation(positions.ToArray()))
+            {
+                tileType = TileType.Red;
+                BuildingSystem.Instance.DisableBuildButton();
+            }
+
+            GetComponent<Building>().UpdatePosition();
             pos = GetComponent<Building>().Position;
             for (int i = -1; i < _bounds.x + 1; i++)
             {
@@ -61,7 +76,12 @@ public class DragAndDrop : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndD
                     GridBuildingSystem.Instance.UpdateTile(new Vector3Int(pos.x + i, pos.y + j), tileType);
                 }
             }
-        }    
+        }
+        else
+        {
+            UpdateDrag();
+        }
+        
     }
 
     public void OnBeginDrag(PointerEventData eventData)
