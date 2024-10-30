@@ -12,7 +12,7 @@ public class Building : MonoBehaviour, IPointerClickHandler
     public Vector2Int Bounds;
     [SerializeField] private BuildingPanel _panel;
     [SerializeField] private SpriteRenderer _buildSprite;
-    private DragAndDrop _dragAndDrop;
+    private DragAndDropSystem _dragAndDrop;
 
     [SerializeField] private BuildingObjects _buildingObjects;
     [SerializeField] private GameObject _flag;
@@ -29,7 +29,7 @@ public class Building : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public DragAndDrop DragAndDrop { get { return _dragAndDrop; } }
+    public DragAndDropSystem DragAndDrop { get { return _dragAndDrop; } }
 
     private void Start()
     {
@@ -48,7 +48,7 @@ public class Building : MonoBehaviour, IPointerClickHandler
 
     public void Move()
     {
-        _dragAndDrop = GetComponent<DragAndDrop>();
+        _dragAndDrop = GetComponent<DragAndDropSystem>();
         BuildingSystem.Instance.StartMoveBuilding(this);
         _dragAndDrop.CanDrag = true;
         _dragAndDrop.StartMove();
@@ -57,7 +57,7 @@ public class Building : MonoBehaviour, IPointerClickHandler
 
     public void NewMove()
     {
-        _dragAndDrop = GetComponent<DragAndDrop>();
+        _dragAndDrop = GetComponent<DragAndDropSystem>();
         _dragAndDrop.CanDrag = true;
         _dragAndDrop.StartMove(newMove: true);
         CloseUI(longest:0f);
@@ -133,7 +133,7 @@ public class Building : MonoBehaviour, IPointerClickHandler
     
     public void OnLoad(BuildingSave save)
     {
-        _dragAndDrop = GetComponent<DragAndDrop>();
+        _dragAndDrop = GetComponent<DragAndDropSystem>();
 
         _panel.RotateButton.onClick.AddListener(Rotate);
         _panel.MoveButton.onClick.AddListener(Move);
@@ -164,7 +164,7 @@ public class Building : MonoBehaviour, IPointerClickHandler
 
     public void OnLoad(string name)
     {
-        _dragAndDrop = GetComponent<DragAndDrop>();
+        _dragAndDrop = GetComponent<DragAndDropSystem>();
 
         _panel.RotateButton.onClick.AddListener(Rotate);
         _panel.MoveButton.onClick.AddListener(Move);

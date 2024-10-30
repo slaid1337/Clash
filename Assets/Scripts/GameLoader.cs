@@ -1,11 +1,10 @@
-using Eiko.YaSDK;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using DG.Tweening;
-using Cysharp.Threading.Tasks;
 using System.Collections;
+using Eiko.YaSDK;
 using Eiko.YaSDK.Data;
 
 public class GameLoader : Singletone<GameLoader>
@@ -15,84 +14,50 @@ public class GameLoader : Singletone<GameLoader>
 
     public UnityEvent OnLoad;
 
+    private bool _isLoad;
+    private bool _adClosed;
+
     public void Start()
     {
-        base.Awake();
+        Application.targetFrameRate = 60;
 
         YandexSDK.instance.onInitializeData += Load;
+
+        YandexSDK.instance.onInterstitialShown += delegate
+        {
+            _adClosed = true;
+        };
+        YandexSDK.instance.onInterstitialShown += CheckOnReady;
     }
 
     private void Load()
     {
-        string localString = PlayerPrefs.GetString("date", "");
-        string cloudString = YandexPrefs.GetString("date", "");
-
-        /*if (!string.IsNullOrEmpty(localString))
-        {
-            DateTime localLastSave = DateTime.Parse(localString);
-
-            if (!string.IsNullOrEmpty(cloudString))
-            {
-                DateTime cloudLastSave = DateTime.Parse(cloudString);
-
-                print("local: " + localString + " cloud: " + cloudString);
-
-                if (cloudLastSave > localLastSave)
-                {
-                    await SaveSystem.LoadCloudData();
-                    SaveSystem.SetSaveDate(DateTime.Now.ToString());
-                    SaveSystem.SetSaveDate(DateTime.Now.ToString(), isCloud: true);
-                    print("Cloud Save");
-                }
-                else if (localLastSave > cloudLastSave)
-                {
-                    await SaveSystem.SendCloudData();
-                    SaveSystem.SetSaveDate(DateTime.Now.ToString());
-                    SaveSystem.SetSaveDate(DateTime.Now.ToString(), isCloud: true);
-                    print("Local Save");
-                }
-            }
-            else
-            {
-                await SaveSystem.SendCloudData();
-                SaveSystem.SetSaveDate(DateTime.Now.ToString());
-                SaveSystem.SetSaveDate(DateTime.Now.ToString(), isCloud: true);
-                print("Local Save");
-            }
-        }
-        else if (!string.IsNullOrEmpty(cloudString))
-        {
-            await SaveSystem.LoadCloudData();
-            SaveSystem.SetSaveDate(DateTime.Now.ToString());
-            SaveSystem.SetSaveDate(DateTime.Now.ToString(), isCloud: true);
-            print("Cloud Save");
-        }
-        else
-        {
-            SaveSystem.SetSaveDate(DateTime.Now.ToString());
-            print("New Save");
-        }*/
-
-
-        if (!string.IsNullOrEmpty(cloudString))
-        {
-            SaveSystem.LoadCloudData();
-            print("Cloud Save");
-        }
-
         OnLoad?.Invoke();
 
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Append(_loadIcon.DOScale(0f, 0.8f));
-        sequence.Append(_overlayImage.DOFade(0f, 1.4f).OnComplete(delegate
+        
+        sequence.Append(_overlayImage.DOFade(0f, 1f).OnComplete(delegate
         {
+            _isLoad = true;
             Destroy(_overlayImage.gameObject);
+            CheckOnReady();
         }));
+        sequence.Join(_loadIcon.DOScale(0f, 0.8f));
 
         SaveSystem.test();
 
         StartCoroutine(SaveCloud());
+    }
+
+    public void CheckOnReady()
+    {
+        if (_isLoad)
+        {
+            YandexSDK.Ready();
+            YandexSDK.StartTab();
+            gameObject.SetActive(false);
+        }
     }
 
     public void DeleteSaves()

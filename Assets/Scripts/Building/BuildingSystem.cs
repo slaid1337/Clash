@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
+using Eiko.YaSDK;
 
 public class BuildingSystem : Singletone<BuildingSystem>
 {
@@ -92,6 +93,7 @@ public class BuildingSystem : Singletone<BuildingSystem>
         _currentBuilding.AcceptNewMove(_currentBuilding.Position);
         OnBuildNewBuilding?.Invoke(_currentBuilding.Name);
         StopBuilding();
+        YandexSDK.instance.ShowInterstitial();
     }
 
     public void BreakNewBuilding()

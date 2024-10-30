@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
-using Eiko.YaSDK.Data;
 using Cysharp.Threading.Tasks;
+using Eiko.YaSDK.Data;
 
 public static class SaveSystem
 {

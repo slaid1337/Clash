@@ -1,5 +1,6 @@
 {
     "name": "LeanLocalization.TMP",
+    "rootNamespace": "",
     "references": [
         "LeanLocalization",
         "Unity.TextMeshPro"
@@ -10,9 +11,7 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [
-        "__TEXTMESHPRO__"
-    ],
+    "defineConstraints": [],
     "versionDefines": [
         {
             "name": "com.unity.textmeshpro",

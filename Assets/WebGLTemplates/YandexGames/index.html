@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en-us">
 <head>
     <meta charset="utf-8">
@@ -6,7 +6,7 @@
     <title>Unity WebGL Player | {{{ PRODUCT_NAME }}}</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <script src="https://yandex.ru/games/sdk/v2"></script>
+    <script src="/sdk.js"></script>
 </head>
 <body bgcolor="#000000">
     <div align="center">
@@ -100,6 +100,7 @@
             var payments = null;
             var playerData = null;
             var playerStats = null;
+            var isReady = false;
 
             YaGames.init({
                 adv: {
@@ -110,7 +111,7 @@
             })
                 .then(ysdk => {
                     sdk = ysdk;
-                    sdk.adv.showFullscreenAdv({ callbacks: {} });
+                    isReady = true;
                 });
 
 
@@ -303,6 +304,29 @@
                     lb.setLeaderboardScore('leaderboard', score);
                 });
             }
+
+            function ReadyTab(){
+                if(isReady){
+                sdk.features.LoadingAPI?.ready();
+                console.log("ready");
+                }
+            }
+
+            function StopTab(){
+                if(isReady){
+                sdk.features.GameplayAPI?.stop()
+                console.log("stop");
+                }
+            }
+
+            function StartTab(){
+                if(isReady){
+                    sdk.features.GameplayAPI?.start()
+                    console.log("start");
+                }
+                
+            }
+
         </script>
 </body>
 </html>

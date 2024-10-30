@@ -15,7 +15,7 @@ public class ChengeLang : MonoBehaviour
 
         if (currentLang == "")
         {
-            YandexSDK.instance.Lang.ToUpper();
+            currentLang = YandexSDK.instance.Lang;
         }
 
         LeanLocalization.SetCurrentLanguageAll(currentLang);

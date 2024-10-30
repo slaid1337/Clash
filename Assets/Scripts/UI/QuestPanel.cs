@@ -45,8 +45,6 @@ public class QuestPanel : Singletone<QuestPanel>
 
         _questStage =  SaveSystem.GetQuestStage();
 
-
-
         if (_questStage < _questObjects.quests.Length)
         {
             QuestPanelItem panelItem = Instantiate(_prefab, _questContainer).GetComponent<QuestPanelItem>();
@@ -107,6 +105,7 @@ public class QuestPanel : Singletone<QuestPanel>
             _questPanelItems.Add(panelItem);
 
             string text = Lean.Localization.LeanLocalization.GetTranslationText( "Build the " + _questObjects.quests[_questStage].BuildingName);
+            panelItem.OriginalText = "Build the " + _questObjects.quests[_questStage].BuildingName;
 
             panelItem.UpdateText(text, "+ " + _questObjects.quests[_questStage].Exp);
         }

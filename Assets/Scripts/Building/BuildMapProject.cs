@@ -26,6 +26,7 @@ public class BuildMapProject : MonoBehaviour, IPointerClickHandler
         else
         {
             GridBuildingSystem.Instance.AddOccupedField(Position);
+            _buildingProjectPanel.Init();
         }
     }
 

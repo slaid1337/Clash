@@ -21,7 +21,7 @@ public class BuildingProjectPanel : MonoBehaviour
         get { return GetComponent<RectTransform>(); }
     }
 
-    private  void Start()
+    public  void Init()
     {
         _panel = GetComponent<RectTransform>();
         _panel.DOScaleY(0f, 0f);

@@ -35,6 +35,12 @@ public class Money : Singletone<Money>
         SaveSystem.OnMoneyChenged += Refresh;
     }
 
+    [ContextMenu("addMOney")]
+    public void AddMoney()
+    {
+        SaveSystem.AddMoney(20000);
+    }
+
     public void Refresh(int money)
     {
         _money = money;

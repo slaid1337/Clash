@@ -5,6 +5,7 @@ public class InputTouchSystem : InputSystem
     private PlayerInputData _playerInputData;
     private StaticData _staticData;
     private int _previousTouchCount;
+    private float _lastTouchDistance;
 
     private void Start()
     {
@@ -43,9 +44,17 @@ public class InputTouchSystem : InputSystem
         }
         else if (Input.touchCount == 2)
         {
+            Touch firstTouch = Input.GetTouch(0);
+            Touch secondTouch = Input.GetTouch(1);
+
+            float distTouch = (firstTouch.position - secondTouch.position).magnitude;
+
+            
+
             if (_previousTouchCount == 1)
             {
                 _playerInputData.leftButtonUp = true;
+                _lastTouchDistance = distTouch;
             }
             else
             {
@@ -58,19 +67,11 @@ public class InputTouchSystem : InputSystem
             _playerInputData.rightButtonDown = true;
             _playerInputData.isDrawing = false;
 
+            float difference = distTouch - _lastTouchDistance;
 
-            Touch firstTouch = Input.GetTouch(0);
-            Touch secondTouch = Input.GetTouch(1);
+            _playerInputData.zoomInput = difference * _staticData.zoomSpeedPhone;
 
-            Vector2 firstTouchLastPos = firstTouch.position - firstTouch.deltaPosition;
-            Vector2 secondTouchLasPos = secondTouch.position - secondTouch.deltaPosition;
-
-            float distTouch = (firstTouchLastPos - secondTouchLasPos).magnitude;
-            float currentDistTouch = (firstTouch.position - secondTouch.position).magnitude;
-
-            float difference = currentDistTouch - distTouch;
-
-            _playerInputData.zoomInput = difference * Time.deltaTime * _staticData.zoomSpeedPhone;
+            _lastTouchDistance = distTouch;
         }
         else
         {

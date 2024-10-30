@@ -1,10 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class Tutorial : MonoBehaviour
 {
@@ -39,7 +41,7 @@ public class Tutorial : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && _canPlay)
         {
-            if (_dialogWindows[_stage].TriggerCollider == null)
+            if (_dialogWindows[_stage].TriggerCollider == null && !IsPointerOverUIObject())
             {
                 NextStage();
             }
@@ -165,6 +167,35 @@ public class Tutorial : MonoBehaviour
         }
 
         _dialogWindows[_stage].Actions.Invoke();
+    }
+
+    public static bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current)
+        {
+            position = new Vector2(Input.mousePosition.x, Input.mousePosition.y)
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        // Указываем маску слоев для UI
+        int layerMask = 1 << LayerMask.NameToLayer("UI");
+
+        // Выполняем Raycast только для UI
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+        int count = 0;
+
+        foreach (var item in results)
+        {
+            // Проверяем, что объект находится на слое UI
+            if (item.gameObject.layer == LayerMask.NameToLayer("UI"))
+            {
+                count++;
+            }
+        }
+
+        return count > 0;
     }
 }
 

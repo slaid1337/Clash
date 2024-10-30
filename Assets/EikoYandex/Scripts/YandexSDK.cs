@@ -19,7 +19,7 @@ namespace Eiko.YaSDK
         [HideInInspector]
         public CanvasAddEditor editorCanvas;
 #endif
-        public const int ReloadAdsSeconds = 180;
+        public const int ReloadAdsSeconds = 60;
         public const string key = "AddsOff";
         public bool AdsEnabled { get; private set; }
 
@@ -59,6 +59,13 @@ namespace Eiko.YaSDK
         private static extern void GetPurchases();
         [DllImport("__Internal")]
         private static extern void SetScoreToTable(int score);
+
+        [DllImport("__Internal")]
+        public static extern void ReadyTab();
+        [DllImport("__Internal")]
+        public static extern void StopTab();
+        [DllImport("__Internal")]
+        public static extern void StartTab();
 
         public event Action addsOnReloaded;
         public event Action onUserDataReceived;
@@ -105,6 +112,7 @@ namespace Eiko.YaSDK
         public string adsPurchize = "AddOff";
         public string Lang = "en";
         public bool IsFirstOpen = true;
+        public bool IsFocused;
 
         private void Awake()
         {
@@ -126,12 +134,66 @@ namespace Eiko.YaSDK
 #endif
             AdsEnabled = 0 == PlayerPrefs.GetInt(key, 0);
             onPurchaseSuccess += PurchizeCallbackAds;
+
+            onRewardedAdError += delegate
+            {
+                StartTab();
+            };
+
+            onRewardedAdClosed += delegate
+            {
+                StartTab();
+            };
+
+            onRewardedAdOpened += delegate
+            {
+                StopTab();
+            };
+
+            onRewardedAdReward += delegate
+            {
+                StartTab();
+            };
+        }
+
+        void OnApplicationFocus(bool hasFocus)
+        {
+            StartTab();
+        }
+
+        void OnApplicationPause(bool isPaused)
+        {
+            IsFocused = false;
+            StopTab();
         }
 
         private void Start()
         {
             StartCoroutine(InitDataPrefs());
             Application.targetFrameRate = 100;
+        }
+
+        private void Update()
+        {
+            if (!IsFocused)
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    IsFocused = true;
+                    StartTab();
+                }
+
+                if (Input.GetMouseButton(1))
+                {
+                    IsFocused = true;
+                    StartTab();
+                }
+            }
+        }
+
+        public static void Ready()
+        {
+            ReadyTab();
         }
 
         public IEnumerator InitDataPrefs()
@@ -177,8 +239,11 @@ namespace Eiko.YaSDK
 #else
                 editorCanvas.OpenFullScreen();
 #endif
+
+                StopTab();
+
                 AudioListener.pause = true;
-                Time.timeScale = 0;
+                
             }
             else
             {
@@ -194,18 +259,21 @@ namespace Eiko.YaSDK
         {
 #if !UNITY_EDITOR && UNITY_WEBGL
             int placemantId = ShowRewardedAd(placement);
+            StopTab();
 #else
             int placemantId = 0;
 #endif
             rewardedAdPlacementsAsInt.Enqueue(placemantId);
             rewardedAdsPlacements.Enqueue(placement);
-            Time.timeScale = 0;
+            
             AudioListener.pause = true;
 #if UNITY_EDITOR
             editorCanvas.OpenReward(placemantId);
 
 #endif
         }
+
+
 
         public void AdsOff()
         {
@@ -268,8 +336,9 @@ namespace Eiko.YaSDK
         /// </summary>
         public void OnInterstitialShown()
         {
+            StartTab();
             AudioListener.pause = false;
-            Time.timeScale = 1;
+            
             onInterstitialShown?.Invoke();
         }
 
@@ -279,7 +348,8 @@ namespace Eiko.YaSDK
         /// <param name="error"></param>
         public void OnInterstitialError(string error)
         {
-            Time.timeScale = 1;
+            StartTab();
+            
             AudioListener.pause = false;
             onInterstitialFailed?.Invoke(error);
         }
@@ -300,7 +370,7 @@ namespace Eiko.YaSDK
         public void OnRewarded(int placement)
         {
             AudioListener.pause = false;
-            Time.timeScale = 1;
+            
             if (placement == rewardedAdPlacementsAsInt.Dequeue())
             {
                 onRewardedAdReward?.Invoke(rewardedAdsPlacements.Dequeue());
@@ -314,7 +384,7 @@ namespace Eiko.YaSDK
         public void OnRewardedClose(int placement)
         {
             AudioListener.pause = false;
-            Time.timeScale = 1;
+            
             onRewardedAdClosed?.Invoke(placement);
         }
 
@@ -324,7 +394,7 @@ namespace Eiko.YaSDK
         /// <param name="placement"></param>
         public void OnRewardedError(string placement)
         {
-            Time.timeScale = 1;
+            
             AudioListener.pause = false;
             onRewardedAdError?.Invoke(placement);
             rewardedAdsPlacements.Clear();
@@ -364,7 +434,6 @@ namespace Eiko.YaSDK
             addsAvailable = false;
             yield return new WaitForSecondsRealtime(ReloadAdsSeconds);
             addsAvailable = true;
-            ShowInterstitial();
             addsOnReloaded?.Invoke();
         }
         public void ShowReview(Action<ReviewCallback> action = null)

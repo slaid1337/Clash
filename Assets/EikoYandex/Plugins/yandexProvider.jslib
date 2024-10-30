@@ -59,6 +59,18 @@ mergeInto(LibraryManager.library, {
   },
   SetScoreToTable: function (score){
     SetScoreTable(score);
+  },
+
+  ReadyTab: function (){
+    ReadyTab();
+  },
+
+StopTab: function (){
+    StopTab();
+  },
+
+StartTab: function (){
+    StartTab();
   }
 
 });
